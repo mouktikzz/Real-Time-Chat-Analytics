@@ -13,6 +13,7 @@ from analytics import get_trending_words
 from producer import producer
 from consumer import consumer
 from processor import MessageProcessor
+from redis_client import get_metrics, get_sentiments
 
 # Shared in-memory data structure for analytics results
 @st.cache_resource
@@ -20,10 +21,6 @@ def get_engine():
     """Starts the producer and consumer in a background thread."""
     queue = asyncio.Queue()
     processor = MessageProcessor()
-    analytics_results: Dict[str, Any] = {
-        "total_messages": 0,
-        "spam_count": 0,
-    }
 
     def run_async_loop():
         loop = asyncio.new_event_loop()
@@ -31,7 +28,7 @@ def get_engine():
         
         # Add producer and consumer to the loop
         loop.create_task(producer(queue))
-        loop.create_task(consumer(queue, processor, analytics_results))
+        loop.create_task(consumer(queue, processor))
         
         loop.run_forever()
 
@@ -39,14 +36,14 @@ def get_engine():
     thread = threading.Thread(target=run_async_loop, daemon=True)
     thread.start()
 
-    return processor, analytics_results
+    return processor
 
 def main():
     st.set_page_config(page_title="Chat Analytics Dashboard", layout="wide")
     st.title("🚀 Real-Time Chat Analytics System")
 
     # Initialize or get the shared engine
-    processor, analytics_results = get_engine()
+    processor = get_engine()
 
     # Layout for metrics
     col1, col2, col3 = st.columns(3)
@@ -67,9 +64,10 @@ def main():
     while True:
         messages = processor.get_messages()
         
-        # Update metrics
-        total = analytics_results["total_messages"]
-        spam = analytics_results["spam_count"]
+        # Update metrics from Redis
+        metrics = get_metrics()
+        total = metrics["total"]
+        spam = metrics["spam"]
         spam_pct = (spam / total * 100) if total > 0 else 0
 
         total_msg_metric.metric("Total Messages", f"{total:,}")
@@ -83,8 +81,8 @@ def main():
                 df_trending = pd.DataFrame(trending, columns=["Word", "Frequency"])
                 trending_words_chart.bar_chart(df_trending.set_index("Word"))
 
-            # Update sentiment chart
-            sentiments = [msg.get("sentiment", 0) for msg in messages[-100:]] # last 100
+            # Update sentiment chart from Redis
+            sentiments = get_sentiments()
             if sentiments:
                 df_sentiment = pd.DataFrame(sentiments, columns=["Sentiment"])
                 sentiment_chart.line_chart(df_sentiment)

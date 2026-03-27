@@ -15,7 +15,7 @@ def main():
     # Run Streamlit dashboard
     # This will now also handle starting the background analytics engine
     try:
-        subprocess.run(["streamlit", "run", dashboard_path], check=True)
+        subprocess.run(["python", "-m", "streamlit", "run", dashboard_path])
     except KeyboardInterrupt:
         print("\n👋 System shut down.")
 

@@ -7,12 +7,13 @@ import pandas as pd
 import time
 import asyncio
 import threading
+import requests
 
 from analytics import get_trending_words
 from producer import producer
 from consumer import consumer
 from processor import MessageProcessor
-from redis_client import get_metrics, get_sentiments
+
 
 
 @st.cache_resource
@@ -64,7 +65,10 @@ def main():
         messages = processor.get_messages()[-500:]
         
         # Update metrics from Redis
-        metrics = get_metrics()
+        try:
+            metrics = requests.get("http://127.0.0.1:8000/metrics", timeout=5).json()
+        except:
+            metrics = {"total": 0, "spam": 0}
         total = metrics["total"]
         spam = metrics["spam"]
         spam_pct = (spam / total * 100) if total > 0 else 0
@@ -81,7 +85,10 @@ def main():
                 trending_words_chart.bar_chart(df_trending.set_index("Word"))
 
             # Update sentiment chart from Redis
-            sentiments = get_sentiments()
+            try:
+                sentiments = requests.get("http://127.0.0.1:8000/sentiments", timeout=5).json()["sentiments"]
+            except:
+                sentiments = []
             if sentiments:
                 df_sentiment = pd.DataFrame(sentiments, columns=["Sentiment"])
                 sentiment_chart.line_chart(df_sentiment)

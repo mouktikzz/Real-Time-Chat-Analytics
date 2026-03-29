@@ -7,7 +7,6 @@ import pandas as pd
 import time
 import asyncio
 import threading
-from typing import Dict, Any
 
 from analytics import get_trending_words
 from producer import producer
@@ -15,7 +14,7 @@ from consumer import consumer
 from processor import MessageProcessor
 from redis_client import get_metrics, get_sentiments
 
-# Shared in-memory data structure for analytics results
+
 @st.cache_resource
 def get_engine():
     """Starts the producer and consumer in a background thread."""
@@ -62,7 +61,7 @@ def main():
 
     # Real-time update loop
     while True:
-        messages = processor.get_messages()
+        messages = processor.get_messages()[-500:]
         
         # Update metrics from Redis
         metrics = get_metrics()

@@ -7,12 +7,9 @@ from typing import Dict, Any
 
 from processor import MessageProcessor
 from analytics import analyze_sentiment, is_spam
+from redis_client import increment_total, increment_spam, add_sentiment
 
-async def consumer(
-    queue: asyncio.Queue,
-    processor: MessageProcessor,
-    analytics_results: Dict[str, Any]
-):
+async def consumer(queue: asyncio.Queue, processor: MessageProcessor):
     """Consumes messages from the queue and performs analytics."""
     while True:
         msg = await queue.get()
@@ -23,12 +20,11 @@ async def consumer(
         msg["sentiment"] = analyze_sentiment(msg["message"])
         msg["is_spam"] = is_spam(msg["message"])
         
-        # Update shared results
-        analytics_results["total_messages"] += 1
+        # Store in Redis
+        increment_total()
         if msg["is_spam"]:
-            analytics_results["spam_count"] += 1
+            increment_spam()
         
-        # To keep the example simple, we won't store historical sentiment.
-        # A real application might store this for time-series analysis.
-        
+        add_sentiment(msg["sentiment"])
+
         queue.task_done()

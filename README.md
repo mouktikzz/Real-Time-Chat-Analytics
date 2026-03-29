@@ -41,7 +41,7 @@ The system is composed of several modular components:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mouktikzz/Real-Time-Chat-Analytics
    cd chat-analytics
    ```
 
@@ -52,7 +52,7 @@ The system is composed of several modular components:
 
 3. **Run the Dashboard (and Engine):**
    ```bash
-   python main.py
+   python dashboard/dashboard.py
    ```
    This will start the message producer/consumer engine and launch the Streamlit dashboard.
 

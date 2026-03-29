@@ -13,8 +13,10 @@ class MessageProcessor:
 
     def add_message(self, message: Dict[str, Any]):
         """Adds a new message to the sliding window."""
+        # add_message({"user_id": 1, "message": "Hi!"})
         self.messages.append(message)
 
     def get_messages(self) -> List[Dict[str, Any]]:
         """Returns all messages in the current window."""
+        # get_messages() -> [{"user_id": 1, "message": "Hi!"}, ...]
         return list(self.messages)

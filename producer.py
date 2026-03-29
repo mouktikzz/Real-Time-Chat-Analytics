@@ -31,6 +31,8 @@ async def producer(queue: asyncio.Queue):
             "timestamp": timestamp,
             "message": message,
         }
+        # msg: {"user_id": 42, "timestamp": 1711718400, "message": "Hello everyone!"}
 
         await queue.put(msg)
+        # Pause for a duration that keeps the message rate at MESSAGE_RATE messages per second
         await asyncio.sleep(1 / MESSAGE_RATE)

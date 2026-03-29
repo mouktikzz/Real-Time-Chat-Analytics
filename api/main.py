@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from redis_client import get_metrics, get_sentiments
+from chat_analytics.redis_client import get_metrics, get_sentiments
 
 app = FastAPI()
 

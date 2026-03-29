@@ -1,2 +1,6 @@
 streamlit
 vaderSentiment
+redis
+fastapi
+uvicorn
+requests

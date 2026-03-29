@@ -10,7 +10,7 @@ def main():
     print("🚀 Starting Real-Time Chat Analytics System...")
     
     # Path to the dashboard script
-    dashboard_path = os.path.join(os.path.dirname(__file__), "dashboard.py")
+    dashboard_path = os.path.join(os.path.dirname(__file__), "dashboard", "dashboard.py")
     
     # Run Streamlit dashboard
     # This will now also handle starting the background analytics engine

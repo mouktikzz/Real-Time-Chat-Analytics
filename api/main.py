@@ -1,5 +1,12 @@
 from fastapi import FastAPI
-from chat_analytics.redis_client import get_metrics, get_sentiments
+import sys
+import os
+
+# Add the project root to sys.path
+# This allows importing modules directly
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from redis_client import get_metrics, get_sentiments
 
 app = FastAPI()
 

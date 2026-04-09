@@ -1,16 +1,16 @@
-# import sys
-# import os
+import sys
+import os
 
-# sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import streamlit as st
 import time
 import asyncio
 import threading
 
-from chat_analytics.producer import producer
-from chat_analytics.consumer import consumer
-from chat_analytics.processor import MessageProcessor
+from producer import producer
+from consumer import consumer
+from processor import MessageProcessor
 from ui_components import update_metrics_ui, update_charts
 
 

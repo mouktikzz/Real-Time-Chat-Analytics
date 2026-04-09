@@ -1,6 +1,6 @@
 import pandas as pd
-from chat_analytics.analytics import get_trending_words
-from chat_analytics.api_client import fetch_metrics, fetch_sentiments
+from analytics import get_trending_words
+from api_client import fetch_metrics, fetch_sentiments
 
 
 def update_metrics_ui(total_msg_metric, spam_count_metric, spam_pct_metric):

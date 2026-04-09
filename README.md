@@ -35,7 +35,9 @@ The system is composed of several modular components:
 
 ## Prerequisites
 
-- **Redis**: Ensure you have Redis installed and running on `localhost:6379`.
+- **Python 3.10+**
+- **Redis**: This project requires Redis for data storage. You can run it locally or via Docker.
+- **Docker (Optional but Recommended)**: To run Redis in a container.
 
 ## How to Run
 
@@ -50,17 +52,27 @@ The system is composed of several modular components:
    pip install -r requirements.txt
    ```
 
-3. **Run the Dashboard (and Engine):**
+3. **Start Redis:**
+   If you have Docker installed, use the provided `docker-compose.yml`:
    ```bash
-   python dashboard/dashboard.py
+   docker-compose up -d
    ```
-   This will start the message producer/consumer engine and launch the Streamlit dashboard.
+   *Otherwise, ensure a Redis server is running on `localhost:6379`.*
 
-4. **Run the API (Optional):**
+4. **Run the Application:**
+   Start the entire system (API + Dashboard) with a single command:
    ```bash
-   uvicorn api.main:app --reload
+   python main.py
    ```
-   The API will be available at `http://localhost:8000`.
+   - **Dashboard**: Available at `http://localhost:8502`
+   - **API Server**: Available at `http://localhost:8000`
+
+## Project Components
+- **`main.py`**: The unified entry point that launches both the backend and frontend.
+- **`dashboard/dashboard.py`**: Streamlit application for live visualization.
+- **`api/main.py`**: FastAPI server providing analytics endpoints.
+- **`consumer.py`**: Background task that processes messages and stores results in Redis.
+- **`producer.py`**: Simulates the chat message stream.
 
 ## API Endpoints
 
